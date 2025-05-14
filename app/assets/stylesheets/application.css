@@ -1,0 +1,16 @@
+/*
+ * This is a manifest file that'll be compiled into application.css.
+ *
+ * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
+ * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
+ * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
+ * depending on specificity.
+ *
+ * Consider organizing styles into separate files for maintainability.
+ */
+/*= require mapbox-gl */
+#map { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; }
+.marker-blip { cursor: pointer; transition: box-shadow 0.2s; }
+.marker-blip:hover { box-shadow: 0 0 16px #007cbf; }
+.popup { position: fixed; top: 50px; left: 50%; transform: translateX(-50%); z-index: 9999; display: none; }
+body { margin: 0; padding: 0; background: #f8fafc; font-family: 'Inter', sans-serif; }

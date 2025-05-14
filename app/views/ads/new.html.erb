@@ -1,0 +1,35 @@
+<h1>New Ad</h1>
+
+<%= form_with model: @ad do |form| %>
+  <div>
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
+  <div>
+    <%= form.label :description %>
+    <%= form.text_area :description %>
+  </div>
+  <div>
+    <%= form.label :latitude %>
+    <%= form.number_field :latitude, step: :any %>
+  </div>
+  <div>
+    <%= form.label :longitude %>
+    <%= form.number_field :longitude, step: :any %>
+  </div>
+  <div>
+    <%= form.label :radius %>
+    <%= form.number_field :radius %>
+  </div>
+  <div>
+    <%= form.label :category %>
+    <%= form.text_field :category %>
+  </div>
+  <div>
+    <%= form.label :images, "Image URLs (comma-separated)" %>
+    <%= form.text_field :images, placeholder: "Comma-separated image URLs" %>
+  </div>
+  <div>
+    <%= form.submit "Create Ad" %>
+  </div>
+<% end %>
