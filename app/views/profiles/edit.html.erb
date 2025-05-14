@@ -1,0 +1,63 @@
+<div class="profile-form-container">
+  <h2>Complete Your Profile</h2>
+  <%= form_with model: @user, url: profile_path, local: true, html: { class: "profile-form" } do |f| %>
+    <div class="form-group">
+      <%= f.label :role, "Select your role" %>
+      <%= f.select :role, [["Viewer", "viewer"], ["Business", "business"]], {}, { id: "role_select", class: "form-control" } %>
+    </div>
+    <div class="form-group" id="business_docs" style="<%= @user.role == "business" ? "" : "display:none;" %>">
+      <%= f.label :business_verification_document, "Upload Business Verification Document" %>
+      <%= f.file_field :business_verification_document, class: "form-control" %>
+    </div>
+    <%= f.submit "Save", class: "button" %>
+  <% end %>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const roleSelect = document.getElementById("role_select");
+    const docsDiv = document.getElementById("business_docs");
+    function toggleDocs() {
+      docsDiv.style.display = roleSelect.value === "business" ? "block" : "none";
+    }
+    roleSelect.addEventListener("change", toggleDocs);
+    toggleDocs();
+  });
+</script>
+<style>
+.profile-form-container {
+  max-width: 400px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 32px 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px #0002;
+}
+.profile-form .form-group {
+  margin-bottom: 18px;
+}
+.profile-form label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+}
+.profile-form .form-control {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+.button {
+  background: #007cbf;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.button:hover {
+  background: #005a8d;
+}
+</style>

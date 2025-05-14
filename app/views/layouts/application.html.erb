@@ -28,10 +28,11 @@
 
   <body>
   <div class="navbar">
-  Adverlyze
+  <span>Adverlyze</span>
   <span class="location" id="city"></span>
   <div>
     <% if user_signed_in? %>
+      <%= link_to "Edit Profile", edit_profile_path, class: "button" %>
       <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "button" %>
     <% else %>
       <%= link_to "Sign Up", new_user_registration_path, class: "button" %>
@@ -39,6 +40,7 @@
     <% end %>
   </div>
 </div>
+
     <%= yield %>
 
 

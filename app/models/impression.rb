@@ -6,4 +6,16 @@ class Impression < ApplicationRecord
   # Optionally, for updates or deletes:
   after_update_commit { broadcast_replace_to "ads" }
   after_destroy_commit { broadcast_remove_to "ads" }
+
+  def self.ransackable_attributes(auth_object = nil)
+    %w[
+      id
+      ad_id
+      user_id
+      latitude
+      longitude
+      created_at
+      updated_at
+    ]
+  end
 end

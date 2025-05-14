@@ -65,14 +65,17 @@
 </head>
 <body>
 
+  <div class="navbar">
+    Adverlyze
+    <span class="location" id="city">Locating...</span>
+  </div>
+
   <div class="map-container">
     <div id="map"></div>
   </div>
-  <% if user_signed_in? && current_user.businesses.any? %>
-  <% current_user.businesses.each do |business| %>
-    <%= link_to "New Ad for #{business.name}", new_business_ad_path(business), class: "button" %>
+  <% if user_signed_in? && current_user.verified_business? %>
+    <%= link_to "New Ad", new_ad_path, class: "button" %>
   <% end %>
-<% end %>
 
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.js"></script>
   <script>
@@ -80,21 +83,18 @@
       // Default to Knoxville, TN if geolocation fails
       const DEFAULT_LON = -83.9207;
       const DEFAULT_LAT = 35.9606;
-  
+
       function isValidNumber(n) {
         return typeof n === "number" && !isNaN(n) && isFinite(n);
       }
-  
+
       function showMap(lon, lat) {
-        // Debug output
-        console.log("showMap called with:", lon, lat);
-  
         if (!isValidNumber(lon) || !isValidNumber(lat)) {
           alert("Invalid coordinates for map: " + lon + ", " + lat + ". Using fallback.");
           lon = DEFAULT_LON;
           lat = DEFAULT_LAT;
         }
-  
+
         mapboxgl.accessToken = 'pk.eyJ1Ijoid2l6ZW1vZGUiLCJhIjoiY21hbzgwaXVnMDJoaDJzbzhsbmM3cXV0eSJ9.h66rMjEr-3MLnPctNOrbUw';
         const map = new mapboxgl.Map({
           container: 'map',
@@ -102,10 +102,12 @@
           center: [lon, lat],
           zoom: 13
         });
+
+        // User's location marker
         new mapboxgl.Marker({color: "#1a2233"})
           .setLngLat([lon, lat])
           .addTo(map);
-  
+
         // Fetch and add ad markers
         fetch('/ads.json')
           .then(resp => resp.json())
@@ -115,27 +117,37 @@
               if (isValidNumber(ad.longitude) && isValidNumber(ad.latitude)) {
                 new mapboxgl.Marker({color: "#007cbf"})
                   .setLngLat([ad.longitude, ad.latitude])
-                  .setPopup(new mapboxgl.Popup().setHTML(`<strong>${ad.title}</strong><br>${ad.description}`))
+                  .setPopup(
+                    new mapboxgl.Popup().setHTML(
+                      `<strong>${ad.title}</strong><br>${ad.description || ''}`
+                    )
+                  )
                   .addTo(map);
               }
             });
+          })
+          .catch(err => {
+            console.error("Failed to fetch ads:", err);
           });
       }
-  
+
+      // Geolocation logic
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
-          console.log("Geolocation success:", lon, lat);
-  
+
           // Reverse geocode for city
           fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
             .then(resp => resp.json())
             .then(data => {
               let city = data.address.city || data.address.town || data.address.village || data.address.hamlet || data.address.state || "Unknown location";
               document.getElementById("city").textContent = city;
+            })
+            .catch(() => {
+              document.getElementById("city").textContent = "Unknown location";
             });
-  
+
           showMap(lon, lat);
         }, function() {
           document.getElementById("city").textContent = "Location permission denied";
@@ -147,7 +159,6 @@
       }
     });
   </script>
-  
+
 </body>
 </html>
-

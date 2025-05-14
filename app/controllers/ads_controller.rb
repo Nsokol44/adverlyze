@@ -17,14 +17,18 @@ class AdsController < ApplicationController
   end
 
   def create
-    # Only allow businesses to create ads
     authorize Ad
-    @ad = current_user.businesses.first.ads.build(ad_params)
-    if @ad.save
-      redirect_to @ad
-    else
-      render :new
-    end
+  business = current_user.businesses.first
+  unless business
+    redirect_to new_business_path, alert: "You must create a business before creating an ad."
+    return
+  end
+  @ad = business.ads.build(ad_params)
+  if @ad.save
+    redirect_to @ad
+  else
+    render :new
+  end
   end
 
   def edit
@@ -50,5 +54,15 @@ class AdsController < ApplicationController
 
   def ad_params
     params.require(:ad).permit(:title, :description, :latitude, :longitude, :radius, :category, :images)
+  end
+
+  before_action :require_verified_business, only: [:new, :create]
+
+  private
+
+  def require_verified_business
+    unless current_user&.verified_business?
+      redirect_to root_path, alert: "Only verified businesses can create ads."
+    end
   end
 end

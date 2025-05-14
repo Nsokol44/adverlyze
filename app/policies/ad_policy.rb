@@ -11,23 +11,8 @@ class AdPolicy < ApplicationPolicy
     #   scope.all
     # end
   end
-end
-
-class AdPolicy
-  attr_reader :user, :ad
-
-  def initialize(user, ad)
-    @user = user
-    @ad = ad
-  end
 
   def create?
-    user.role == "business"
+    user.present? && user.verified_business?
   end
-
-  def update?
-    user.role == "business"
-  end
-
-  # Add other actions as needed
 end

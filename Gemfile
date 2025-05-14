@@ -68,3 +68,4 @@ gem 'geocoder'
 gem 'devise' # Authentication
 gem 'pundit' # Authorization
 gem 'mapbox-gl-rails' # For maps.
+gem 'activeadmin' #For Admin Control

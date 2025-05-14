@@ -7,5 +7,17 @@ class Review < ApplicationRecord
   # Optionally, for updates or deletes:
   after_update_commit { broadcast_replace_to "ads" }
   after_destroy_commit { broadcast_remove_to "ads" }
+  
+  def self.ransackable_attributes(auth_object = nil)
+    %w[
+      id
+      user_id
+      business_id
+      rating
+      comment
+      created_at
+      updated_at
+    ]
+  end
 end
 

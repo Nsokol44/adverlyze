@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
+  get "profiles/edit"
+  get "profiles/update"
   devise_for :users
 
   # Health check endpoint
@@ -17,4 +21,7 @@ Rails.application.routes.draw do
     resources :impressions, only: [:create]
     resources :reviews, only: [:create, :index]
   end
+
+  resource :profile, only: [:edit, :update]
+
 end
